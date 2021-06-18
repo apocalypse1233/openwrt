@@ -174,7 +174,7 @@ Index: b/drivers/net/wireless/ralink/rt2x00/rt2800lib.c
  
 -	if (rt2x00_rt(rt2x00dev, RT3070)) {
 +	if (rt2x00_rt(rt2x00dev, RT3070) ||
-+	    rt2x00_rt(rt2x00dev, RT3078))) {
++	    rt2x00_rt(rt2x00dev, RT3078)) {
  		rfcsr = rt2800_rfcsr_read(rt2x00dev, 27);
 -		if (rt2x00_rt_rev_lt(rt2x00dev, RT3070, REV_RT3070F))
 +		if (rt2x00_rt_rev_lt(rt2x00dev, RT3070, REV_RT3070F) ||
