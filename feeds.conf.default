@@ -1,5 +1,5 @@
-src-git packages https://github.com/apocalypse1233/packages.git^4ad7d05a251b8468f6f648a9b0f2a8fb7ea4e1dd
-src-git luci https://github.com/apocalypse1233/luci.git^3f5aa0cd5559d591815d84240bc0c7ae45fcf946
-src-git routing https://github.com/apocalypse1233/routing.git^ef3e03a3670d436489f3ab52f3e112f9bd40439c
-src-git telephony https://github.com/apocalypse1233/telephony.git^02b5c7b2d51f5ec649af9beff3c323e802ea3ed7
-src-git freifunk https://github.com/apocalypse1233/freifunk.git^c621a4283870fe062489fe5e26a15deda7ef4ed7
+src-git packages https://github.com/apocalypse1233/packages.git;openwrt-19.07
+src-git luci https://github.com/apocalypse1233/luci.git;openwrt-19.07
+src-git routing https://github.com/apocalypse1233/routing.git;openwrt-19.07
+src-git telephony https://github.com/apocalypse1233/telephony.git;openwrt-19.07
+src-git freifunk https://github.com/apocalypse1233/freifunk.git;openwrt-19.07
