@@ -1,7 +1,7 @@
-src-git packages https://github.com/apocalypse1233/packages.git
-src-git luci https://github.com/apocalypse1233/luci.git
-src-git routing https://github.com/apocalypse1233/routing.git
-src-git telephony https://github.com/apocalypse1233/telephony.git
+src-git packages https://github.com/apocalypse1233/packages.git^9ecd0adb876d72c0561e659da90d34f2160922dc
+src-git luci https://github.com/apocalypse1233/luci.git^f1b26ab551af005e433a5adb44d5d6fee971e765
+src-git routing https://github.com/apocalypse1233/routing.git^e43c272acb03255e47c2321e9e3ac935d437f3c3
+src-git telephony https://github.com/apocalypse1233/telephony.git^12ff4b096d3637dc1e2a487287ceebd837a01fa5
 #src-git video https://github.com/openwrt/video.git
 #src-git targets https://github.com/openwrt/targets.git
 #src-git oldpackages http://git.openwrt.org/packages.git
