@@ -1,5 +1,5 @@
-src-git packages https://github.com/apocalypse1233/packages.git;openwrt-21.02
-src-git luci https://github.com/apocalypse1233/luci.git;openwrt-21.02
-src-git routing https://github.com/apocalypse1233/routing.git;openwrt-21.02
-src-git telephony https://github.com/apocalypse1233/telephony.git;openwrt-21.02
+src-git packages https://github.com/apocalypse1233/packages.git^c731cf05a4fc52a34e0e574025f347a63f26e7f7
+src-git luci https://github.com/apocalypse1233/luci.git^f6eb13ffd11edfea8d8e77a7817a2a1497061d06
+src-git routing https://github.com/apocalypse1233/routing.git^3336ecd33c1084386542ed5c7d1d049fd941ccd0
+src-git telephony https://github.com/apocalypse1233/telephony.git^be93cb755ce097b3b0fee0c21c03788df4c29571
 #src-link custom /usr/src/openwrt/custom-feed
