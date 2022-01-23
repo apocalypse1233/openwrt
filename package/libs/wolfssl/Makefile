@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=wolfssl
 PKG_VERSION:=4.8.1-stable
-PKG_RELEASE:=1
+PKG_RELEASE:=$(AUTORELEASE)
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://github.com/wolfSSL/wolfssl/archive/v$(PKG_VERSION)
@@ -32,7 +32,7 @@ PKG_CONFIG_DEPENDS:=\
 	CONFIG_WOLFSSL_HAS_ECC25519 CONFIG_WOLFSSL_HAS_OCSP \
 	CONFIG_WOLFSSL_HAS_SESSION_TICKET CONFIG_WOLFSSL_HAS_TLSV10 \
 	CONFIG_WOLFSSL_HAS_TLSV13 CONFIG_WOLFSSL_HAS_WPAS CONFIG_WOLFSSL_HAS_CERTGEN \
-	CONFIG_WOLFSSL_HAS_OPENVPN
+	CONFIG_WOLFSSL_HAS_OPENVPN CONFIG_WOLFSSL_ALT_NAMES
 
 PKG_ABI_VERSION=$(patsubst %-stable,%,$(PKG_VERSION)).$(call version_abbrev,$(call confvar,$(PKG_CONFIG_DEPENDS)))
 
@@ -59,11 +59,19 @@ define Package/libwolfssl/config
 	source "$(SOURCE)/Config.in"
 endef
 
-TARGET_CFLAGS += $(FPIC) -DFP_MAX_BITS=8192 -fomit-frame-pointer -flto
+TARGET_CFLAGS += \
+	$(FPIC) \
+	-fomit-frame-pointer \
+	-flto \
+	-DFP_MAX_BITS=8192 \
+	-DWOLFSSL_ALT_CERT_CHAINS \
+	$(if $(CONFIG_WOLFSSL_ALT_NAMES),-DWOLFSSL_ALT_NAMES)
+
 TARGET_LDFLAGS += -flto
 
 # --enable-stunnel needed for OpenSSL API compatibility bits
 CONFIGURE_ARGS += \
+	--enable-reproducible-build \
 	--enable-lighty \
 	--enable-opensslall \
 	--enable-opensslextra \
@@ -97,7 +105,7 @@ endif
 
 ifeq ($(CONFIG_WOLFSSL_HAS_WPAS),y)
 CONFIGURE_ARGS += \
-	--enable-wpas --enable-sha512 --enable-fortress --enable-fastmath
+	--enable-wpas --enable-fortress --enable-fastmath
 endif
 
 define Build/InstallDev
