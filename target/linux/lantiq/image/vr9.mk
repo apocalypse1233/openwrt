@@ -28,6 +28,7 @@ define Device/arcadyan_arv7519rw22
   IMAGE_SIZE := 31232k
   DEVICE_PACKAGES := kmod-usb-dwc2
   SUPPORTED_DEVICES += ARV7519RW22
+  DEFAULT := n
 endef
 TARGET_DEVICES += arcadyan_arv7519rw22
 
@@ -46,6 +47,7 @@ define Device/arcadyan_arv7519rw22-ge
   IMAGE_SIZE := 31232k
   DEVICE_PACKAGES := kmod-usb-dwc2
   SUPPORTED_DEVICES += ARV7519RW22
+  DEFAULT := n
 endef
 TARGET_DEVICES += arcadyan_arv7519rw22-ge
 
