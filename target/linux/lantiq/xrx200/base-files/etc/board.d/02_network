@@ -18,9 +18,6 @@ lantiq_setup_interfaces()
 	arcadyan,arv7519rw22)
 		ucidef_set_interface_lan_wan "eth1 eth2 eth3 eth4" "eth0"
 		;;
-        arcadyan,arv7519rw22-ge)
-                ucidef_set_interface_lan_wan "eth1 eth2 eth3" "eth0"
-                ;;
 	arcadyan,vgv7510kw22-brn|\
 	arcadyan,vgv7510kw22-nor|\
 	arcadyan,vgv7519-brn|\
