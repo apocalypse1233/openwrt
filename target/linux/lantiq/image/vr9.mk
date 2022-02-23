@@ -32,25 +32,6 @@ define Device/arcadyan_arv7519rw22
 endef
 TARGET_DEVICES += arcadyan_arv7519rw22
 
-define Device/arcadyan_arv7519rw22-ge
-  $(Device/dsa-migration)
-  DEVICE_VENDOR := Arcadyan
-  DEVICE_MODEL := ARV7519RW22
-  DEVICE_VARIANT := GE
-  DEVICE_ALT0_VENDOR := Orange
-  DEVICE_ALT0_MODEL := Livebox
-  DEVICE_ALT0_VARIANT := 2.1 GE
-  DEVICE_ALT1_VENDOR := Astoria Networks
-  DEVICE_ALT1_MODEL := ARV7519RW22
-  DEVICE_ALT1_VARIANT := GE
-  KERNEL_SIZE := 2048k
-  IMAGE_SIZE := 31232k
-  DEVICE_PACKAGES := kmod-usb-dwc2
-  SUPPORTED_DEVICES += ARV7519RW22
-  DEFAULT := n
-endef
-TARGET_DEVICES += arcadyan_arv7519rw22-ge
-
 define Device/arcadyan_vg3503j
   $(Device/dsa-migration)
   DEVICE_VENDOR := BT Openreach
