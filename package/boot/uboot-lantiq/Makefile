@@ -294,19 +294,6 @@ define U-Boot/p2812hnufx_nandspl
   DEPENDS+=@BROKEN
 endef
 
-define U-Boot/arv7519rw_nor
-  NAME:=Arcadyan ARV7519RW (NOR)
-  BUILD_SUBTARGET:=xrx200
-  BUILD_DEVICES:=arcadyan_arv7519rw-nor
-endef
-
-define U-Boot/arv7519rw_ram
-  NAME:=Arcadyan ARV7519RW (RAM)
-  BUILD_SUBTARGET:=xrx200
-  BUILD_DEVICES:=arcadyan_arv7519rw-nor
-  DDR_SETTINGS:=board/arcadyan/arv7519rw/ddr_settings.h
-endef
-
 define U-Boot/vgv7510kw22_brn
   NAME:=Arcadyan VGV7510KW22 (BRN)
   BUILD_SUBTARGET:=xrx200
@@ -362,8 +349,7 @@ UBOOT_TARGETS:= \
 	fb3370_eva fb3370_ram fb3370_sfspl \
 	p2812hnufx_ram p2812hnufx_nandspl \
 	vgv7510kw22_brn vgv7510kw22_nor vgv7510kw22_ram \
-	vgv7519_brn vgv7519_nor vgv7519_ram \
-	arv7519rw_nor arv7519rw_ram
+	vgv7519_brn vgv7519_nor vgv7519_ram
 
 define CompressVR9Firmware
 	$(STAGING_DIR_HOST)/bin/lzma e \
