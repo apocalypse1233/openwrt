@@ -145,7 +145,7 @@
 &gswip_ports {
 	port@0 {
 		reg = <0>;
-		label = "eth5";
+		label = "eth0";
 		phy-mode = "rgmii";
 		phy-handle = <&phy0>;
 	};
