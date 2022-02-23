@@ -99,11 +99,11 @@
 };
 
 &gphy0 {
-	lantiq,gphy-mode = <GPHY_MODE_FE>;
+	lantiq,gphy-mode = <GPHY_MODE_GE>;
 };
 
 &gphy1 {
-	lantiq,gphy-mode = <GPHY_MODE_GE>;
+	lantiq,gphy-mode = <GPHY_MODE_FE>;
 };
 
 &gpio {
@@ -142,7 +142,7 @@
 &gswip_ports {
 	port@0 {
 		reg = <0>;
-		label = "eth5";
+		label = "eth0";
 		phy-mode = "rgmii";
 		phy-handle = <&phy0>;
 	};
