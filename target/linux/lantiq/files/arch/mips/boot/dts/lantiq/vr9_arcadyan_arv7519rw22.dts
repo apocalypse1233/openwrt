@@ -145,31 +145,31 @@
 &gswip_ports {
 	port@0 {
 		reg = <0>;
-		label = "eth0";
+		label = "lan5";
 		phy-mode = "rgmii";
 		phy-handle = <&phy0>;
 	};
 	port@2 {
 		reg = <2>;
-		label = "eth3";
+		label = "lan3";
 		phy-mode = "internal";
 		phy-handle = <&phy11>;
 	};
 	port@3 {
 		reg = <3>;
-		label = "eth4";
+		label = "lan4";
 		phy-mode = "internal";
 		phy-handle = <&phy12>;
 	};
 	port@4 {
 		reg = <4>;
-		label = "eth1";
+		label = "lan1";
 		phy-mode = "internal";
 		phy-handle = <&phy13>;
 	};
 	port@5 {
 		reg = <5>;
-		label = "eth2";
+		label = "lan2";
 		phy-mode = "internal";
 		phy-handle = <&phy14>;
 	};
