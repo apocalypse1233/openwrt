@@ -1553,18 +1553,6 @@ define Device/ubnt_edgerouter-x
 endef
 TARGET_DEVICES += ubnt_edgerouter-x
 
-define Device/ubnt_edgerouter-x-16m
-  $(Device/dsa-migration)
-  $(Device/uimage-lzma-loader)
-  DEVICE_VENDOR := Ubiquiti
-  DEVICE_MODEL := EdgeRouter X
-  DEVICE_VARIANT := 16M
-  IMAGE_SIZE := 16064k
-  DEVICE_PACKAGES += -wpad-basic-wolfssl
-  SUPPORTED_DEVICES += ubnt-erx ubiquiti,edgerouterx
-endef
-TARGET_DEVICES += ubnt_edgerouter-x-16m
-
 define Device/ubnt_edgerouter-x-sfp
   $(Device/ubnt_edgerouter_common)
   DEVICE_MODEL := EdgeRouter X SFP
