@@ -16,7 +16,7 @@ lantiq_setup_interfaces()
 		ucidef_set_interface_lan "lan1 lan2"
 		;;
 	arcadyan,arv7519rw22)
-		ucidef_set_interface_lan "eth1 eth2 eth3 eth4 eth5"
+		ucidef_set_interface_lan "eth0 eth1 eth2 eth3 eth4"
 		;;
 	arcadyan,arv7519rw22-ge)
 		ucidef_set_interface_lan "eth0 eth1 eth2 eth3"
