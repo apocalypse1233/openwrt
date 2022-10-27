@@ -29,6 +29,13 @@
 		reg = <##n>; \
 	};
 
+#define EXTERNAL_SFP_PHY_FULL(n, s) \
+	phy##n: ethernet-phy@##n { \
+		compatible = "ethernet-phy-ieee802.3-c22"; \
+		sfp = <&sfp##s>; \
+		reg = <##n>; \
+	};
+
 #define SWITCH_PORT(n, s, m) \
 	port@##n { \
 		reg = <##n>; \
@@ -168,6 +175,16 @@
 
 			#address-cells = <1>;
 			#size-cells = <0>;
+		};
+
+		timer0: timer@3100 {
+			compatible = "realtek,rtl8390-timer", "realtek,otto-timer";
+			reg = <0x3100 0x10>, <0x3110 0x10>, <0x3120 0x10>,
+			      <0x3130 0x10>, <0x3140 0x10>;
+
+			interrupt-parent = <&intc>;
+			interrupts = <29 4>, <28 4>, <17 4>, <16 4>, <15 4>;
+			clocks = <&ccu CLK_LXB>;
 		};
 
 		uart0: uart@2000 {
