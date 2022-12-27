@@ -1,0 +1,28 @@
+Index: b/arch/mips/bcm63xx/usb-common.c
+===================================================================
+--- a/arch/mips/bcm63xx/usb-common.c
++++ b/arch/mips/bcm63xx/usb-common.c
+@@ -17,6 +17,7 @@
+ #include <bcm63xx_regs.h>
+ #include <bcm63xx_io.h>
+ #include <bcm63xx_usb_priv.h>
++#include <linux/delay.h>
+ 
+ static DEFINE_SPINLOCK(usb_priv_reg_lock);
+ 
+@@ -158,6 +159,15 @@ void bcm63xx_usb_priv_ehci_cfg_set(void)
+ 	spin_lock_irqsave(&usb_priv_reg_lock, flags);
+ 
+ 	if (BCMCPU_IS_6358()) {
++		/* power cycle the USB PLL */
++		pr_info("Resetting USB PLL...");
++		reg = bcm_rset_readl(RSET_USBH_PRIV, 0x0c);
++		reg &= ~0x02000000;
++		bcm_rset_writel(RSET_USBH_PRIV, reg, 0x0c);
++		mdelay(1);
++		reg |= 0x02000000;
++		bcm_rset_writel(RSET_USBH_PRIV, reg, 0x0c);
++
+ 		reg = bcm_rset_readl(RSET_USBH_PRIV, USBH_PRIV_SWAP_6358_REG);
+ 		reg &= ~USBH_PRIV_SWAP_EHCI_ENDN_MASK;
+ 		reg |= USBH_PRIV_SWAP_EHCI_DATA_MASK;
