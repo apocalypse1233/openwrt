@@ -4,7 +4,7 @@
 #include <dt-bindings/mips/lantiq_rcu_gphy.h>
 
 / {
-	compatible = "arcadyan,arv7519rw22", "arcadyan,arv7519rw22-ge", "lantiq,xway", "lantiq,vr9";
+	compatible = "arcadyan,arv7519rw22-ge", "arcadyan,arv7519rw22", "lantiq,xway", "lantiq,vr9";
 	model = "Orange Livebox 2.1";
 
 	chosen {
@@ -99,11 +99,11 @@
 };
 
 &gphy0 {
-	lantiq,gphy-mode = <GPHY_MODE_FE>;
+	lantiq,gphy-mode = <GPHY_MODE_GE>;
 };
 
 &gphy1 {
-	lantiq,gphy-mode = <GPHY_MODE_FE>;
+	lantiq,gphy-mode = <GPHY_MODE_GE>;
 };
 
 &gpio {
@@ -131,14 +131,8 @@
 	phy11: ethernet-phy@11 {
 		reg = <0x11>;
 	};
-	phy12: ethernet-phy@12 {
-		reg = <0x12>;
-	};
 	phy13: ethernet-phy@13 {
 		reg = <0x13>;
-	};
-	phy14: ethernet-phy@14 {
-		reg = <0x14>;
 	};
 };
 
@@ -151,27 +145,15 @@
 	};
 	port@2 {
 		reg = <2>;
-		label = "lan3";
+		label = "lan2";
 		phy-mode = "internal";
 		phy-handle = <&phy11>;
-	};
-	port@3 {
-		reg = <3>;
-		label = "lan4";
-		phy-mode = "internal";
-		phy-handle = <&phy12>;
 	};
 	port@4 {
 		reg = <4>;
 		label = "lan1";
 		phy-mode = "internal";
 		phy-handle = <&phy13>;
-	};
-	port@5 {
-		reg = <5>;
-		label = "lan2";
-		phy-mode = "internal";
-		phy-handle = <&phy14>;
 	};
 };
 
