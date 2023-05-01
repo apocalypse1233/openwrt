@@ -7,7 +7,7 @@ include ./common-tp-link.mk
 
 DEFAULT_SOC := mt7621
 
-DEVICE_VARS += ELECOM_HWNAME LINKSYS_HWNAME
+DEVICE_VARS += ELECOM_HWNAME LINKSYS_HWNAME DLINK_HWID
 
 ifdef CONFIG_LINUX_5_10
   DTS_CPPFLAGS += -DDTS_LEGACY
@@ -60,6 +60,29 @@ define Build/iodata-mstc-header
 		echo -ne "$$(echo $$header_crc | sed 's/../\\x&/g')" | \
 			dd of=$@ bs=4 count=1 seek=1 conv=notrunc 2>/dev/null; \
 	)
+endef
+
+define Build/znet-header
+	$(eval version=$(word 1,$(1)))
+	( \
+		data_size_crc="$$(dd if=$@ 2>/dev/null | gzip -c | \
+			tail -c 8 | od -An -N4 -tx4 --endian big | tr -d ' \n')"; \
+		payload_len="$$(dd if=$@ bs=4 count=1 skip=1 2>/dev/null | od -An -tdI --endian big | tr -d ' \n')"; \
+		payload_size_crc="$$(dd if=$@ ibs=1 count=$$payload_len 2>/dev/null | gzip -c | \
+			tail -c 8 | od -An -N4 -tx4 --endian big | tr -d ' \n')"; \
+		echo -ne "\x5A\x4E\x45\x54" | dd bs=4 count=1 conv=sync 2>/dev/null; \
+		echo -ne "$$(printf '%08x' $$(stat -c%s $@) | fold -s2 | xargs -I {} echo \\x{} | tac | tr -d '\n')" | \
+			dd bs=4 count=1 conv=sync 2>/dev/null; \
+		echo -ne "$$(echo $$data_size_crc | sed 's/../\\x&/g')" | \
+			dd bs=4 count=1 conv=sync 2>/dev/null; \
+		echo -ne "$$(echo $$payload_size_crc | sed 's/../\\x&/g')" | \
+			dd bs=4 count=1 conv=sync 2>/dev/null; \
+		echo -ne "\x12\x34\x56\x78" | dd bs=4 count=1 conv=sync 2>/dev/null; \
+		echo -ne "$(version)" | dd bs=28 count=1 conv=sync 2>/dev/null; \
+		dd if=/dev/zero bs=262096 count=1 conv=sync 2>/dev/null | tr "\000" "\377"; \
+		cat $@; \
+	) > $@.new
+	mv $@.new $@
 endef
 
 define Build/belkin-header
@@ -140,6 +163,7 @@ TARGET_DEVICES += adslr_g7
 
 define Device/afoundry_ew1200
   $(Device/dsa-migration)
+  $(Device/uimage-lzma-loader)
   IMAGE_SIZE := 16064k
   DEVICE_VENDOR := AFOUNDRY
   DEVICE_MODEL := EW1200
@@ -379,7 +403,7 @@ define Device/beeline_smartbox-flash
   IMAGES += factory.trx
   IMAGE/factory.trx := append-kernel | append-ubi | check-size
   IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
-  DEVICE_PACKAGES := kmod-usb3 kmod-mt7615-firmware uencrypt
+  DEVICE_PACKAGES := kmod-usb3 kmod-mt7615-firmware uencrypt-mbedtls
 endef
 TARGET_DEVICES += beeline_smartbox-flash
 
@@ -456,6 +480,7 @@ TARGET_DEVICES += buffalo_wsr-2533dhpl
 
 define Device/buffalo_wsr-600dhp
   $(Device/dsa-migration)
+  $(Device/uimage-lzma-loader)
   IMAGE_SIZE := 16064k
   DEVICE_VENDOR := Buffalo
   DEVICE_MODEL := WSR-600DHP
@@ -525,8 +550,25 @@ define Device/cudy_x6
   DEVICE_MODEL := X6
   UIMAGE_NAME := R13
   DEVICE_PACKAGES := kmod-mt7915-firmware -uboot-envtools
+  SUPPORTED_DEVICES += R13
 endef
 TARGET_DEVICES += cudy_x6
+
+define Device/dlink_dap-1620-b1
+  DEVICE_VENDOR := D-Link
+  DEVICE_MODEL := DAP-1620
+  DEVICE_VARIANT := B1
+  DEVICE_PACKAGES := kmod-mt7615-firmware rssileds
+  DLINK_HWID := MT76XMT7621-RP-PR2475-NA
+  IMAGE_SIZE := 16064k
+  IMAGES += factory.bin
+  IMAGE/factory.bin := $$(sysupgrade_bin) | \
+    check-size 11009992 | pad-to 11009992 | \
+    append-md5sum-ascii-salted ffff | \
+    append-string $$(DLINK_HWID) | \
+    check-size
+endef
+TARGET_DEVICES += dlink_dap-1620-b1
 
 define Device/dlink_dap-x1860-a1
   $(Device/dsa-migration)
@@ -972,6 +1014,16 @@ define Device/gnubee_gb-pc2
   IMAGE_SIZE := 32448k
 endef
 TARGET_DEVICES += gnubee_gb-pc2
+
+define Device/hanyang_hyc-g920
+  $(Device/dsa-migration)
+  $(Device/uimage-lzma-loader)
+  DEVICE_VENDOR := Hanyang
+  DEVICE_MODEL := CJ-Hello HYC-G920
+  IMAGE_SIZE := 15744k
+  DEVICE_PACKAGES := kmod-usb3 kmod-mt76x2 kmod-usb-ledtrig-usbport
+endef
+TARGET_DEVICES += hanyang_hyc-g920
 
 define Device/h3c_tx180x
   $(Device/dsa-migration)
@@ -1495,6 +1547,19 @@ define Device/mediatek_mt7621-eval-board
 endef
 TARGET_DEVICES += mediatek_mt7621-eval-board
 
+define Device/mercusys_mr70x-v1
+  $(Device/dsa-migration)
+  $(Device/tplink-safeloader)
+  DEVICE_VENDOR := Mercusys
+  DEVICE_MODEL := MR70X
+  DEVICE_VARIANT := v1
+  DEVICE_PACKAGES := kmod-mt7915-firmware -uboot-envtools
+  TPLINK_BOARD_ID := MR70X
+  KERNEL := $(KERNEL_DTB) | uImage lzma
+  IMAGE_SIZE := 15744k
+endef
+TARGET_DEVICES += mercusys_mr70x-v1
+
 define Device/MikroTik
   $(Device/dsa-migration)
   DEVICE_VENDOR := MikroTik
@@ -1587,7 +1652,7 @@ define Device/mts_wg430223
   IMAGES += factory.trx
   IMAGE/factory.trx := append-kernel | append-ubi | check-size
   IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
-  DEVICE_PACKAGES := kmod-mt7615-firmware uencrypt
+  DEVICE_PACKAGES := kmod-mt7615-firmware uencrypt-mbedtls
 endef
 TARGET_DEVICES += mts_wg430223
 
@@ -2038,6 +2103,18 @@ define Device/totolink_x5000r
 endef
 TARGET_DEVICES += totolink_x5000r
 
+define Device/tplink_archer-ax23-v1
+  $(Device/dsa-migration)
+  $(Device/tplink-safeloader)
+  DEVICE_MODEL := Archer AX23
+  DEVICE_VARIANT := v1
+  DEVICE_PACKAGES := kmod-mt7915-firmware -uboot-envtools
+  TPLINK_BOARD_ID := ARCHER-AX23-V1
+  KERNEL := $(KERNEL_DTB) | uImage lzma
+  IMAGE_SIZE := 15744k
+endef
+TARGET_DEVICES += tplink_archer-ax23-v1
+
 define Device/tplink_archer-a6-v3
   $(Device/dsa-migration)
   $(Device/tplink-safeloader)
@@ -2137,6 +2214,9 @@ define Device/tplink_ec330-g5u-v1
 	uImage-tplink-c9 firmware 'OS IMAGE ($(VERSION_DIST))'
   KERNEL_INITRAMFS := kernel-bin | append-dtb | lzma | loader-kernel | \
 	uImage none
+  IMAGES += factory.bin
+  IMAGE/factory.bin := append-kernel | pad-to $$(KERNEL_SIZE) | \
+	append-ubi | check-size
   IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata | check-size
 endef
 TARGET_DEVICES += tplink_ec330-g5u-v1
@@ -2837,3 +2917,19 @@ define Device/zyxel_wap6805
   IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
 endef
 TARGET_DEVICES += zyxel_wap6805
+
+define Device/zyxel_wsm20
+  $(Device/dsa-migration)
+  BLOCKSIZE := 128k
+  PAGESIZE := 2048
+  KERNEL_SIZE := 8192k
+  IMAGE_SIZE := 41943040
+  UBINIZE_OPTS := -E 5
+  DEVICE_VENDOR := ZyXEL
+  DEVICE_MODEL := WSM20
+  DEVICE_PACKAGES := kmod-mt7915-firmware
+  KERNEL := kernel-bin | lzma | fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb | znet-header V1.00(ABZF.0)C0
+  KERNEL_INITRAMFS := kernel-bin | lzma | fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb | znet-header V1.00(ABZF.0)C0
+  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
+endef
+TARGET_DEVICES += zyxel_wsm20
