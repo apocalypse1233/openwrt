@@ -165,7 +165,7 @@ if VERSIONOPT
 	config VERSION_DIST
 		string
 		prompt "Release distribution"
-		default "OpenWrt"
+		default "FreeWRT"
 		help
 			This is the name of the release distribution.
 			If unspecified, it defaults to OpenWrt.
@@ -173,6 +173,7 @@ if VERSIONOPT
 	config VERSION_NUMBER
 		string
 		prompt "Release version number"
+		default "23.05-SNAPSHOT"
 		help
 			This is the release version number embedded in the image.
 			If unspecified, it defaults to SNAPSHOT for the master branch
@@ -190,7 +191,7 @@ if VERSIONOPT
 	config VERSION_REPO
 		string
 		prompt "Release repository"
-		default "https://downloads.openwrt.org/releases/23.05-SNAPSHOT"
+		default "http://freewrt.darkserver.linkpc.net/releases/23.05-SNAPSHOT"
 		help
 			This is the repository address embedded in the image, it defaults
 			to the trunk snapshot repo; the url may contain the following placeholders:
