@@ -32,7 +32,6 @@ EXCLUDE_DIRS:= \
 	*.install.clean \
 	*.install.flags \
 	*.install \
-	*/doc \
 	*/share/locale
 
 SDK_DIRS = \
@@ -69,6 +68,10 @@ KERNEL_FILES_ARCH = \
 	kernel/asm-offsets.s \
 	kernel/module.lds
 
+ifeq ($(LINUX_KARCH),powerpc)
+  KERNEL_FILES_ARCH += lib/crtsavres.o
+endif
+
 KERNEL_FILES_BASE := \
 	.config \
 	Makefile \
@@ -87,15 +90,18 @@ KERNEL_FILES := $(patsubst $(TOPDIR)/%,%,$(wildcard $(addprefix $(LINUX_DIR)/,$(
 #
 USERSPACE_UTILS_FILES := \
 	tools/build \
+	tools/leds \
+	tools/power/cpupower \
 	tools/scripts \
-	tools/usb/usbip \
-	tools/spi
+	tools/spi \
+	tools/thermal/tmon \
+	tools/usb/usbip
 
 USERSPACE_FILES := $(patsubst $(TOPDIR)/%,%,$(wildcard $(addprefix $(LINUX_DIR)/,$(USERSPACE_UTILS_FILES))))
 
 all: compile
 
-$(BIN_DIR)/$(SDK_NAME).tar.xz: clean
+$(BIN_DIR)/$(SDK_NAME).tar.zst: clean
 	mkdir -p \
 		$(SDK_BUILD_DIR)/dl \
 		$(SDK_BUILD_DIR)/package \
@@ -146,7 +152,7 @@ $(BIN_DIR)/$(SDK_NAME).tar.xz: clean
 		./files/Config.in \
 		./files/Makefile \
 		./files/include/prepare.mk \
-		./files/README.SDK \
+		./files/README.md \
 		$(SDK_BUILD_DIR)/
 	mkdir -p $(SDK_BUILD_DIR)/package/kernel
 	$(CP) \
@@ -158,6 +164,8 @@ $(BIN_DIR)/$(SDK_NAME).tar.xz: clean
 		$(SDK_BUILD_DIR)/package/kernel/
 
 	-rm -rf $(SDK_BUILD_DIR)/$(STAGING_SUBDIR_HOST)/.prereq-build
+	-rm -rf $(SDK_BUILD_DIR)/$(STAGING_SUBDIR_HOST)/doc
+	-rm -rf $(SDK_BUILD_DIR)/$(STAGING_SUBDIR_HOST)/share/doc
 
 	-rm -f $(SDK_BUILD_DIR)/feeds.conf.default
 	$(if $(BASE_FEED),echo "$(BASE_FEED)" > $(SDK_BUILD_DIR)/feeds.conf.default)
@@ -173,15 +181,16 @@ $(BIN_DIR)/$(SDK_NAME).tar.xz: clean
 	find $(SDK_BUILD_DIR) -name .svn | $(XARGS) rm -rf
 	find $(SDK_BUILD_DIR) -name CVS | $(XARGS) rm -rf
 	-make -C $(SDK_BUILD_DIR)/scripts/config clean
+
 	(cd $(BUILD_DIR); \
-		tar -I '$(STAGING_DIR_HOST)/bin/xz -7e -T$(if $(filter 1,$(NPROC)),2,0)' -cf $@ $(SDK_NAME) \
+		tar -I '$(STAGING_DIR_HOST)/bin/zstd -T0 --ultra -20' -cf $@ $(SDK_NAME) \
 		--mtime="$(shell date --date=@$(SOURCE_DATE_EPOCH))"; \
 	)
 
 download:
 prepare:
-compile: $(BIN_DIR)/$(SDK_NAME).tar.xz
+compile: $(BIN_DIR)/$(SDK_NAME).tar.zst
 install: compile
 
 clean:
-	rm -rf $(SDK_BUILD_DIR) $(BIN_DIR)/$(SDK_NAME).tar.xz
+	rm -rf $(SDK_BUILD_DIR) $(BIN_DIR)/$(SDK_NAME).tar.zst

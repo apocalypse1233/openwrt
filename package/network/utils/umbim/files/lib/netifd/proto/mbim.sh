@@ -20,8 +20,9 @@ proto_mbim_init_config() {
 	proto_config_add_string username
 	proto_config_add_string password
 	[ -e /proc/sys/net/ipv6 ] && proto_config_add_string ipv6
-	proto_config_add_boolean dhcp
-	proto_config_add_boolean dhcpv6
+	proto_config_add_string dhcp
+	proto_config_add_string dhcpv6
+	proto_config_add_boolean sourcefilter
 	proto_config_add_string pdptype
 	proto_config_add_int mtu
 	proto_config_add_defaults
@@ -47,7 +48,7 @@ _proto_mbim_setup() {
 	local device apn pincode delay auth username password allow_roaming allow_partner
 	local dhcp dhcpv6 pdptype ip4table ip6table mtu $PROTO_DEFAULT_OPTIONS
 	json_get_vars device apn pincode delay auth username password allow_roaming allow_partner
-	json_get_vars dhcp dhcpv6 pdptype ip4table ip6table mtu $PROTO_DEFAULT_OPTIONS
+	json_get_vars dhcp dhcpv6 sourcefilter pdptype ip4table ip6table mtu $PROTO_DEFAULT_OPTIONS
 
 	[ ! -e /proc/sys/net/ipv6 ] && ipv6=0 || json_get_var ipv6 ipv6
 
@@ -199,15 +200,15 @@ _proto_mbim_setup() {
 	proto_init_update "$ifname" 1
 	proto_send_update "$interface"
 
-	[ -z "$dhcp" ] && dhcp=1
-	[ -z "$dhcpv6" ] && dhcpv6=1
+	[ -z "$dhcp" ] && dhcp="auto"
+	[ -z "$dhcpv6" ] && dhcpv6="auto"
 
 	[ "$iptype" != "ipv6" ] && {
 		json_init
 		json_add_string name "${interface}_4"
 		json_add_string ifname "@$interface"
 		ipv4address=$(_proto_mbim_get_field ipv4address "$mbimconfig")
-		if [ -n "$ipv4address" ]; then
+		if [ -n "$ipv4address" -a "$dhcp" != 1 ]; then
 			json_add_string proto "static"
 
 			json_add_array ipaddr
@@ -222,7 +223,7 @@ _proto_mbim_setup() {
 			json_add_string proto "dhcp"
 		fi
 
-		[ "$peerdns" = 0 ] || {
+		[ "$peerdns" = 0 -a "$dhcp" != 1 ] || {
 			json_add_array dns
 			for server in $(_proto_mbim_get_field ipv4dnsserver "$mbimconfig"); do
 				json_add_string "" "$server"
@@ -242,7 +243,7 @@ _proto_mbim_setup() {
 		json_add_string name "${interface}_6"
 		json_add_string ifname "@$interface"
 		ipv6address=$(_proto_mbim_get_field ipv6address "$mbimconfig")
-		if [ -n "$ipv6address" ]; then
+		if [ -n "$ipv6address" -a "$dhcpv6" != 1 ]; then
 			json_add_string proto "static"
 
 			json_add_array ip6addr
@@ -263,9 +264,10 @@ _proto_mbim_setup() {
 			echo "mbim[$$]" "Starting DHCPv6 on $ifname"
 			json_add_string proto "dhcpv6"
 			json_add_string extendprefix 1
+			[ "$sourcefilter" = "0" ] && json_add_boolean sourcefilter "0"
 		fi
 
-		[ "$peerdns" = 0 ] || {
+		[ "$peerdns" = 0 -a "$dhcpv6" != 1 ] || {
 			json_add_array dns
 			for server in $(_proto_mbim_get_field ipv6dnsserver "$mbimconfig"); do
 				json_add_string "" "$server"
