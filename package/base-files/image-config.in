@@ -184,7 +184,7 @@ if VERSIONOPT
 	config VERSION_REPO
 		string
 		prompt "Release repository"
-		default "http://downloads.freewrt.tk/releases/22.03-SNAPSHOT"
+		default "http://freewrt.darkserver.linkpc.net/releases/22.03-SNAPSHOT"
 		help
 			This is the repository address embedded in the image, it defaults
 			to the trunk snapshot repo; the url may contain the following placeholders:
