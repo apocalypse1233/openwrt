@@ -1,0 +1,10 @@
+--- a/drivers/net/wireless/ralink/rt2x00/rt2800usb.c
++++ b/drivers/net/wireless/ralink/rt2x00/rt2800usb.c
+@@ -952,6 +952,7 @@ static const struct usb_device_id rt2800
+ 	{ USB_DEVICE(0x148f, 0x2770) },
+ 	{ USB_DEVICE(0x148f, 0x2870) },
+ 	{ USB_DEVICE(0x148f, 0x3070) },
++	{ USB_DEVICE(0x14ef, 0x3078) },
+ 	{ USB_DEVICE(0x148f, 0x3071) },
+ 	{ USB_DEVICE(0x148f, 0x3072) },
+ 	/* Samsung */
