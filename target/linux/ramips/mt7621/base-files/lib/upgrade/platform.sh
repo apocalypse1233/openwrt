@@ -89,6 +89,7 @@ platform_do_upgrade() {
 	linksys,ea8100-v1|\
 	linksys,ea8100-v2|\
 	mts,wg430223|\
+	netgear,eax12|\
 	netgear,r6220|\
 	netgear,r6260|\
 	netgear,r6350|\
@@ -101,6 +102,7 @@ platform_do_upgrade() {
 	netgear,wac104|\
 	netgear,wac124|\
 	netgear,wax202|\
+	netis,n6|\
 	netis,wf2881|\
 	raisecom,msg1500-x-00|\
 	rostelecom,rt-fe-1a|\
