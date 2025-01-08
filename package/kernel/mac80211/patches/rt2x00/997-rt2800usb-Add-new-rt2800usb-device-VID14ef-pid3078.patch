@@ -1,5 +1,3 @@
-Index: b/drivers/net/wireless/ralink/rt2x00/rt2800usb.c
-===================================================================
 --- a/drivers/net/wireless/ralink/rt2x00/rt2800usb.c
 +++ b/drivers/net/wireless/ralink/rt2x00/rt2800usb.c
 @@ -946,6 +946,7 @@ static const struct usb_device_id rt2800
