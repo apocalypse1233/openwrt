@@ -132,7 +132,8 @@ ramips_setup_interfaces()
 	tplink,mr600-v2-eu)
 		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3" "wan"
 		;;
-	ubnt,edgerouter-x)
+	ubnt,edgerouter-x|\
+	ubnt,edgerouter-x-16m)
 		ucidef_set_interfaces_lan_wan "eth1 eth2 eth3 eth4" "eth0"
 		;;
 	ubnt,edgerouter-x-sfp)
