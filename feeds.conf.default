@@ -1,4 +1,4 @@
-src-git packages https://github.com/apocalypse1233/packages.git;openwrt-23.05
-src-git luci https://github.com/apocalypse1233/luci.git;openwrt-23.05
-src-git routing https://github.com/apocalypse1233/routing.git;openwrt-23.05
-src-git telephony https://github.com/apocalypse1233/telephony.git;openwrt-23.05
+src-git packages https://github.com/apocalypse1233/packages.git^cfc50fc4a233e9dfd7589dc5409ea0c49213e8f0
+src-git luci https://github.com/apocalypse1233/luci.git^240f41b71e595d67a8ab17b2aecd09a5f43c0c7c
+src-git routing https://github.com/apocalypse1233/routing.git^fa22ff1f05662f2ea456aaff6745ee3da519c1f7
+src-git telephony https://github.com/apocalypse1233/telephony.git^98c8a5aa4624312ed758e2e2b6d4039050a1649d
